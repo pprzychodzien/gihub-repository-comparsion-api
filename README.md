@@ -9,10 +9,10 @@ The API accepts POST requests json body in the following format:
 
 ```
 {
-	"repositories": {
-		"first_repo": "xxxxx",
-		"second_repo": "yyyyy"
-	}
+  "repositories": {
+    "first_repo": "xxxxx",
+    "second_repo": "yyyyy"
+  }
 }
 ```
 
