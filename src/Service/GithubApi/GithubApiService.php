@@ -7,27 +7,51 @@ namespace App\Service\GithubApi;
 use Symfony\Component\HttpClient\Response\CurlResponse;
 use App\Service\AbstractApiService;
 
+/**
+ * Service for retrieving data form GitHub Api
+ *
+ * @author  Paweł Przychodzień
+ */
 
 class GithubApiService extends AbstractApiService
 
 {   
     /**
-    * @var string
+     * Repo enpoint URL
+     * 
+     * @var string
     */
     private $repo_url = 'https://api.github.com/repos/';
 
     /**
-    * @var string
+     * Search endpoint URL
+     * 
+     * @var string
     */
     private $search_url = 'https://api.github.com/search/';
 
-    public function getRepo(string $repo): ?array
+    /**
+     * Method for retrieving repositories data
+     * 
+     * @param string $case repository name   
+     * @return array with repository info or null
+    */
+
+    public function getRepo(string $case): ?array
     {
-        $response = $this->makeApiCall('GET', $this->repo_url . $repo);
-        return $this->processRequest($repo, $response);
+        $response = $this->makeApiCall('GET', $this->repo_url . $case);
+        return $this->processResponse($case, $response);
     }
 
-    protected function processRequest(string $case, CurlResponse $response): ?array
+    /**
+     * Method for processing the response
+     * 
+     * @param string $case repository name   
+     * @param CurlResponse $response api response  
+     * @return array with repository info as array or null
+    */
+
+    protected function processResponse(string $case, CurlResponse $response): ?array
     {
         if ($response->getStatusCode() === 200){
             return $response->toArray();
@@ -36,22 +60,45 @@ class GithubApiService extends AbstractApiService
         }
     }
 
-    public function getLastReleaseDate(string $repo): ?string
+    /**
+     * Method for retrieving repositories last release date data
+     * 
+     * @param string $case repository name   
+     * @return string with repository last release date info or null
+    */
+
+    public function getLastReleaseDate(string $case): ?string
     {
-        $response = $this->makeApiCall('GET', $this->repo_url . $repo . '/releases/latest');
-        $result = $this->processRequest($repo, $response);
+        $response = $this->makeApiCall('GET', $this->repo_url . $case. '/releases/latest');
+        $result = $this->processResponse($case, $response);
         return $result ? $result['published_at'] : null;
     }
-    public function getOpenPullRequestsCount(string $repo): ?int
+
+    /**
+     * Method for retrieving repositories open pull requests count data
+     * 
+     * @param string $case repository name   
+     * @return int with repository open pull requests count or null
+    */
+
+    public function getOpenPullRequestsCount(string $case): ?int
     {
-        $response = $this->makeApiCall('GET', $this->search_url . 'issues?q=repo:' . $repo . '%20is:pr%20is:open&per_page=1');
-        $result = $this->processRequest($repo, $response);
+        $response = $this->makeApiCall('GET', $this->search_url . 'issues?q=repo:' . $case. '%20is:pr%20is:open&per_page=1');
+        $result = $this->processResponse($case, $response);
         return $result ? $result['total_count'] : null;
     }
-    public function getClosedPullRequestsCount(string $repo): ?int
+
+    /**
+     * Method for retrieving repositories closed pull requests count data
+     * 
+     * @param string $case repository name   
+     * @return int with repository closed pull requests count or null
+    */
+
+    public function getClosedPullRequestsCount(string $case): ?int
     {
-        $response = $this->makeApiCall('GET', $this->search_url . 'issues?q=repo:' . $repo . '%20is:pr%20is:closed&per_page=1');
-        $result = $this->processRequest($repo, $response);
+        $response = $this->makeApiCall('GET', $this->search_url . 'issues?q=repo:' . $case. '%20is:pr%20is:closed&per_page=1');
+        $result = $this->processResponse($case, $response);
         return $result ? $result['total_count'] : null;
     }
 }

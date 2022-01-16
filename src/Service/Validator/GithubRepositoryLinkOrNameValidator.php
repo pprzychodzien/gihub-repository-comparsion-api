@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Validator;
 
 use Symfony\Component\Validator\Constraint;
@@ -7,8 +9,22 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
 
+/**
+ * Custom cavidator for validating the input GitHub url/name 
+ *
+ * @author  Paweł Przychodzień
+ */
+
+
 class GithubRepositoryLinkOrNameValidator extends ConstraintValidator
 {
+    /**
+     * Method for retrieving repositories data
+     * 
+     * @param $value with value to check  
+     * @param Constraint $constraint class
+    */
+
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof GithubRepositoryLinkOrName) {

@@ -24,6 +24,6 @@ abstract class AbstractApiService{
         return $this->client->request($method, $url);
     }
 
-    abstract protected function processRequest(string $case, CurlResponse $response): ?array;
+    abstract protected function processResponse(string $case, CurlResponse $response): ?array;
 }
 

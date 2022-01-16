@@ -8,14 +8,24 @@ use Github\Client;
 use App\Service\Api\Validator\RepositoryComparePayloadValidator;
 use App\Service\GithubApi\GithubApiService;
 
+/**
+ * Service for GitHub repositories comparsion
+ *
+ * @author  Paweł Przychodzień
+ */
+
 class CompareRepositoriesService
 {
     /**
+     * Validator for input payload
+     * 
      * @var RepositoryComparePayloadValidator
      */
     private $validator;
 
     /**
+     * Service for GitHub API requests
+     * 
      * @var GithubApiService
      */
     private $githubApiService;
@@ -26,6 +36,14 @@ class CompareRepositoriesService
         $this->githubApiService = $githubApiService;
     }
 
+    /**
+     * Method for starting the comparsion
+     * 
+     * Validates the input and passes the data to compare() method
+     * @param array $data an array with data to compare
+     * @return array with comparsion data or error info
+    */
+
     public function validateAndCompare(array $data): array
     {
         $errors = $this->validator->validatePayload($data);
@@ -35,7 +53,17 @@ class CompareRepositoriesService
         return ["errors" => $errors];
     }
 
-    public function compare(array $data = []): array
+    /**
+     * Method gathering the comparsion data
+     * 
+     * Normalizes GitHub repos names for Api call
+     * Gets the statistics from GitHub API service
+     * Gather the comparsion data from another methods
+     * @param array $data an array with data to compare   
+     * @return array with comparsion data
+    */
+
+    public function compare(array $data): array
     {
         $comparsion = [];
 
@@ -49,6 +77,16 @@ class CompareRepositoriesService
         }
         return $this->addWinners($comparsion);
     }
+
+    /**
+     * Method adding the retrieved statistics to result array
+     * 
+     * If there is a problem with repo statistics (api not working, repo is private, invalid repo name) it returns zeros for all the comparsion categories
+     * @param string $case repo name   
+     * @param array $statistics an (optional) array with all API repo info
+     * @param array $comparsion an array with current comparsion data to update
+     * @return array $comparsion with updated comparsion data
+    */
     private function addStatisticsToComparsion(string $case, ?array $statistics, array $comparsion): array
     {
         if ($statistics){
@@ -70,6 +108,13 @@ class CompareRepositoriesService
         return $comparsion;
     }
 
+    /**
+     * Chooses winners (general and for every cathegory)
+     * 
+     * @param array $comparsion an array with comparsion data
+     * @return array $comparsion updated with winners data
+    */
+
     private function addWinners(array $comparsion): array
     {
         foreach($comparsion as $category => $competitors){
@@ -82,8 +127,10 @@ class CompareRepositoriesService
                 $comparsion[$category]['winner'] = 'draw';
             } 
         }
+        
         $count_winners = \array_count_values(array_column($comparsion, 'winner'));
         $maxs = \array_keys($count_winners, max($count_winners));
+
         if(\count($maxs) > 1){
             $comparsion['winner'] = 'draw';
         }else{

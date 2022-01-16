@@ -9,9 +9,17 @@ use App\Service\Api\CompareRepositoriesService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * An API Controller for comparing GitHub Repositories
+ *
+ * @author  Paweł Przychodzień
+ */
+
 class CompareRepositoriesController extends AbstractController
 {
     /**
+     * Service for making the comparsion
+     * 
      * @var CompareRepositoriesService
      */
     private $compareRepositoriesService;
@@ -20,6 +28,13 @@ class CompareRepositoriesController extends AbstractController
     {
         $this->compareRepositoriesService = $compareRepositoriesService;
     }
+
+    /**
+     * Main method
+     *
+     * @param  Request $request input request data
+     * @return JsonResponse with result of the comparsion or error info 
+    */
 
     public function compareAction(Request $request): JsonResponse
     {
