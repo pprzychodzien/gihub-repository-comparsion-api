@@ -1,0 +1,4 @@
+compare_repositories:
+  path: /compare-repositories
+  controller: App\Controller\Api\CompareRepositoriesController::compareAction
+  methods: [POST]
