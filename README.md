@@ -5,6 +5,12 @@ To start the project:
 - install dependenencies with 'composer install' command
 - start the app on youtr localhost with Symfony-CLI 'symfony:server' command
 
+The endpoint route is:
+
+```
+(localhost:8000)/api/compare-repositories
+```
+
 The API accepts POST requests json body in the following format:
 
 ```
